@@ -1,18 +1,43 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
+import { createClient } from '@supabase/supabase-js'
+
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 export default function ChatPage() {
+
     const [message, setMessage] = React.useState('');
     const [messageList, setMessageList] = React.useState([]);
     const maxId = messageList.reduce((prev, curr) => prev = prev > curr.id ? prev : curr.id, 0);
 
+    React.useEffect(() => {
+        supabaseClient
+            .from('messages')
+            .select('*')
+            .order('id', { ascending: false })
+            .then(({ data }) => {
+                setMessageList(data);
+            });
+    }, []);
+
     function handleNewMessage(newMessage) {
         const message = {
-            id: maxId + 1,
             from: 'crtsms',
             text: newMessage,
         };
+
+        supabaseClient
+            .from('messages')
+            .insert(message)
+            .then(({ data }) => {
+                setMessageList([
+                    data[0],
+                    ...messageList
+                ])
+            });
 
         setMessageList([
             message,
