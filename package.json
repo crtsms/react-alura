@@ -1,0 +1,25 @@
+{
+  "name": "react-alura",
+  "version": "1.0.0",
+  "description": "Next.js app made in the Imersao React by Alura",
+  "main": "index.js",
+  "keywords": [],
+  "author": {
+    "name": "Crislei Terassi Sorrilha",
+    "email": "crts.ms@gmail.com",
+    "url": "https://www.crislei.dev/"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@skynexui/components": "^1.24.2",
+    "next": "^12.0.9",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  }
+}
