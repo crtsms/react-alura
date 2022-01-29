@@ -61,7 +61,7 @@ export default function InitialPage() {
                         as="form"
                         onSubmit={function (event) {
                             event.preventDefault();
-                            route.push('/chat');
+                            route.push(`/chat?username=${username}`);
                         }}
                         styleSheet={{
                             display: 'flex',

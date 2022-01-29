@@ -1,17 +1,28 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
+import { useRouter } from 'next/router';
 import appConfig from '../config.json';
 import { createClient } from '@supabase/supabase-js'
+import { ButtonSendSticker } from '../src/components/ButtonSendSticker'
 
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-export default function ChatPage() {
+function getMessagesFromDb(handleNewMessageDelegate) {
+    return supabaseClient
+        .from('messages')
+        .on('INSERT', (incoming) => {
+            handleNewMessageDelegate(incoming.new);
+        })
+        .subscribe();
+}
 
+export default function ChatPage() {
+    const route = useRouter();
+    const user = route.query.username
     const [message, setMessage] = React.useState('');
     const [messageList, setMessageList] = React.useState([]);
-    const maxId = messageList.reduce((prev, curr) => prev = prev > curr.id ? prev : curr.id, 0);
 
     React.useEffect(() => {
         supabaseClient
@@ -21,11 +32,24 @@ export default function ChatPage() {
             .then(({ data }) => {
                 setMessageList(data);
             });
+
+        const subscription = getMessagesFromDb((incoming) => {
+            setMessageList((currentListValue) => {
+                return [
+                    incoming,
+                    ...currentListValue
+                ]
+            });
+        });
+
+        return () => {
+            subscription.unsubscribe();
+        }
     }, []);
 
     function handleNewMessage(newMessage) {
         const message = {
-            from: 'crtsms',
+            from: user,
             text: newMessage,
         };
 
@@ -33,16 +57,9 @@ export default function ChatPage() {
             .from('messages')
             .insert(message)
             .then(({ data }) => {
-                setMessageList([
-                    data[0],
-                    ...messageList
-                ])
+                console.log('Creating message ' + data);
             });
 
-        setMessageList([
-            message,
-            ...messageList,
-        ]);
         setMessage('');
     }
 
@@ -163,6 +180,11 @@ export default function ChatPage() {
                             }}
                         />
 
+                        <ButtonSendSticker onStickerClick={(sticker) => {
+                            handleNewMessage(':sticker: ' + sticker);
+                        }}
+                        />
+
                     </Box>
                 </Box>
             </Box>
@@ -259,7 +281,13 @@ function MessageList(props) {
                                         {(new Date().toLocaleDateString())}
                                     </Text>
                                 </Box>
-                                {message.text}
+                                {message.text.startsWith(':sticker:') ? (
+                                    <Image src={message.text.replace(':sticker:', '')} />
+                                )
+                                    : (
+                                        message.text
+                                    )}
+
                             </Box>
                             <Box>
                                 <Button
