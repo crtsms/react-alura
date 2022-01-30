@@ -1,4 +1,6 @@
 import appConfig from '../config.json';
+import * as React from 'react';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 function GlobalStyle() {
     return (
@@ -46,9 +48,10 @@ function GlobalStyle() {
   
   export default function CustomApp({ Component, pageProps }) {
     return (
-        <>
+        <React.Fragment>
             <GlobalStyle />
+            <CssBaseline />
             <Component {...pageProps} />
-        </>
+        </React.Fragment>
     );
   }
