@@ -90,6 +90,9 @@ export default function InitialPage() {
                             onChange={function (event) {
                                 setUserName(event.target.value);
                             }}
+                            styleSheet={{
+                                fontSize: '1rem'
+                            }}
                             fullWidth
                             textFieldColors={{
                                 neutral: {

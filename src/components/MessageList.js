@@ -24,6 +24,7 @@ export function MessageList(props) {
                     <Paper key={message.id}
                         elevation={0}
                         variant="outlined"
+                        onLoad={() => { props.onLoad(); }}
                         sx={{
                             p: 1,
                             margin: 'auto',

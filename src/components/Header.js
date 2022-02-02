@@ -12,11 +12,13 @@ import Skeleton from '@mui/material/Skeleton';
 export function Header(props) {
     const route = useRouter();
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box>
             <AppBar
-                position="static"
+                position="fixed"
                 sx={{
-                    backgroundColor: appConfig.theme.colors.primary[500]
+                    backgroundColor: appConfig.theme.colors.primary[500],
+                    position: 'fixed', 
+                    top: 0,   
                 }}
             >
                 <Toolbar>

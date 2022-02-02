@@ -1,6 +1,8 @@
 import React from 'react';
 import { Box, Button, Text, Image } from '@skynexui/components';
 import appConfig from '../../config.json';
+import IconButton from '@mui/material/IconButton';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 
 export function ButtonSendSticker(props) {
   const [isOpen, setOpenState] = React.useState('');
@@ -11,27 +13,18 @@ export function ButtonSendSticker(props) {
         position: 'relative',
       }}
     >
-      <Button
-        styleSheet={{
-          borderRadius: '50%',
-          padding: '0 3px 0 0',
-          minWidth: '50px',
-          minHeight: '50px',
-          fontSize: '20px',
-          marginBottom: '8px',
-          lineHeight: '0',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: appConfig.theme.colors.neutrals[300],
+      <IconButton aria-label='send' 
+        sx={{ 
+          color: appConfig.theme.colors.primary[400],
           filter: isOpen ? 'grayscale(0)' : 'grayscale(1)',
           hover: {
             filter: 'grayscale(0)',
-          }
-        }}
-        label="😋"
+          }          
+        }} 
         onClick={() => setOpenState(!isOpen)}
-      />
+      >
+          <EmojiEmotionsIcon />
+      </IconButton>              
       {isOpen && (
         <Box
           styleSheet={{
